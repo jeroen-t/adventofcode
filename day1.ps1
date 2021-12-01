@@ -1,24 +1,25 @@
-# Sample Input
-# [System.Int32[]]$measurements = 199,200,208,210,200,207,240,269,260,263
-
-# Actual Input
 $path = Join-Path $PSScriptRoot \input\input_day1.txt
 [System.Int32[]]$measurements = Get-Content -Path $path
 
-# Day 1 - First Half
+function Get-aocSonarSweep {
+    [CmdletBinding()]
+    param (
+        [System.Int32[]]$Measurements,
+        [switch]$IncludeThree
+    )
 
-$output = for ($i = 1; $i -lt $measurements.Length; $i++) {
-    if ($measurements[$i] -gt $measurements[$i-1]) {
-        1
+    if($IncludeThree.IsPresent) {
+        $j = 2
     }
-}
-"Day 1 - First Half answer: $(($output | Measure-Object -Sum).Sum)"
-
-# Day 2 - Second Half
-
-$output = for ($i = 1; $i -lt $measurements.Length-2; $i++) {
-    if ($measurements[$i+2] -gt $measurements[$i-1]) {
-        1
+    $output = for ($i = 1; $i -lt $Measurements.Length-$j; $i++) {
+        if ($Measurements[$i+$j] -gt $Measurements[$i-1]) {
+            1
+        }
     }
+
+    return ($output | Measure-Object -Sum).Sum
 }
-"Day 1 - Second Half 2nd answer: $(($output | Measure-Object -Sum).Sum)"
+
+$r1 = Get-aocSonarSweep -Measurements $measurements
+$r2 = Get-aocSonarSweep -Measurements $measurements -IncludeThree
+"My answer for the first half is: {0} and for the second half is: {1}." -f $r1,$r2
