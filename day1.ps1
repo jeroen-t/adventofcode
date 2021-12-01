@@ -1,6 +1,3 @@
-$path = Join-Path $PSScriptRoot \input\input_day1.txt
-[System.Int32[]]$measurements = Get-Content -Path $path
-
 function Get-aocSonarSweep {
     [CmdletBinding()]
     param (
@@ -20,6 +17,10 @@ function Get-aocSonarSweep {
     return ($output | Measure-Object -Sum).Sum
 }
 
+$path = Join-Path $PSScriptRoot \input\input_day1.txt
+[System.Int32[]]$measurements = Get-Content -Path $path
+
 $r1 = Get-aocSonarSweep -Measurements $measurements
 $r2 = Get-aocSonarSweep -Measurements $measurements -IncludeThree
+
 "My answer for the first half is: {0} and for the second half is: {1}." -f $r1,$r2
