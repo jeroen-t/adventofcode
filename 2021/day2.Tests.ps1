@@ -39,6 +39,9 @@ Describe 'Move-aocSubmarine' {
         it 'Mandatory ''Value'' parameter of type integer' {
             $cmd | Should -HaveParameter 'Value' -Type 'int' -Mandatory
         }
+        it '(optional) ''IncludeAim'' parameter of switch type' {
+            $cmd | Should -HaveParameter 'IncludeAim' -Type 'switch'
+        }
     }
     Context 'Returns the correct results without aim' {
         BeforeAll {
