@@ -1,10 +1,6 @@
 BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1','.ps1')
-}
-
-Describe 'Get-aocSubmarineDirections' {
-    BeforeAll {
-        $course =
+    $course =
 @"
 forward 5
 down 5
@@ -13,7 +9,9 @@ up 3
 down 8
 forward 2
 "@
-    }
+}
+
+Describe 'Get-aocSubmarineDirections' {
     Context 'Returns the correct results' {
         BeforeAll {
             $result = Get-aocSubmarineDirections -Course $course
@@ -29,6 +27,9 @@ forward 2
 }
 
 Describe 'Move-aocSubmarine' {
+    BeforeAll {
+        $result = Get-aocSubmarineDirections -Course $course
+    }
     Context 'Has required parameters' {
         BeforeAll {
             $cmd = Get-Command -Name 'Move-aocSubmarine'
