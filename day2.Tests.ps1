@@ -61,10 +61,10 @@ Describe 'Move-aocSubmarine' {
         it 'Horizontal position should be 15' {
             $result2.Horizontal | Should -be 15
         }
-        it 'Depth position should be 10' {
+        it 'Depth position should be 60' {
             $result2.Depth | Should -be 60
         }
-        it 'Location should be 150' {
+        it 'Location should be 900' {
             $result2.Location | Should -be 900
         }
     }

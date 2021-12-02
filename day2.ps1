@@ -23,7 +23,9 @@ function Move-aocSubmarine {
         [string]$Directions,
 
         [Parameter (Mandatory,ValueFromPipelineByPropertyName)]
-        [int]$Value
+        [int]$Value,
+
+        [switch]$IncludeAim
     )
     Begin {
         $position = [PSCustomObject]@{
@@ -31,13 +33,38 @@ function Move-aocSubmarine {
             Horizontal  =   [int]0
             Location    =   [int]0
         }
+        if ($IncludeAim.IsPresent) {
+            $position | Add-Member -NotePropertyName Aim -NotePropertyValue 0
+        }
     }
     Process {
         switch($Directions)
         {
-            'down'      {$position.Depth += $Value}
-            'forward'   {$position.Horizontal += $Value}
-            'up'        {$position.Depth -= $Value}
+            'down'
+                {
+                    if ($IncludeAim.IsPresent) {
+                        $position.Aim += $Value
+                    } else {
+                        $position.Depth += $Value
+                    }
+                }
+            'forward'
+                {
+                    if ($IncludeAim.IsPresent) {
+                        $position.Horizontal += $Value;
+                        $position.Depth += ($position.Aim * $Value)
+                    } else {
+                        $position.Horizontal += $Value
+                    }
+                }
+            'up'
+                {
+                    if ($IncludeAim.IsPresent) {
+                        $position.Aim -= $Value
+                    } else {
+                        $position.Depth -= $Value
+                    }
+                }
         }
     }
     End {
@@ -46,4 +73,8 @@ function Move-aocSubmarine {
     }
 }
 
-Get-aocSubmarineDirection $(Get-Content .\input\input_day2.txt) | Move-aocSubmarine
+#Results
+
+$location1 = (Get-aocSubmarineDirection $(Get-Content .\input\input_day2.txt) | Move-aocSubmarine).Location
+$location2 = (Get-aocSubmarineDirection $(Get-Content .\input\input_day2.txt) | Move-aocSubmarine -IncludeAim).Location
+"[Day 2] first answer: {0}, second answer: {1} " -f $location1,$location2
