@@ -73,8 +73,9 @@ function Move-aocSubmarine {
     }
 }
 
-#Results
+$path = Join-Path $PSScriptRoot ..\input\2021\input_day2.txt
+$course = Get-Content -Path $path
 
-$location1 = (Get-aocSubmarineDirection $(Get-Content .\input\input_day2.txt) | Move-aocSubmarine).Location
-$location2 = (Get-aocSubmarineDirection $(Get-Content .\input\input_day2.txt) | Move-aocSubmarine -IncludeAim).Location
+$location1 = (Get-aocSubmarineDirection $course | Move-aocSubmarine).Location
+$location2 = (Get-aocSubmarineDirection $course | Move-aocSubmarine -IncludeAim).Location
 "[Day 2] first answer: {0}, second answer: {1} " -f $location1,$location2

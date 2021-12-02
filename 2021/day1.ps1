@@ -17,7 +17,7 @@ function Get-aocSonarSweep {
     return ($output | Measure-Object -Sum).Sum
 }
 
-$path = Join-Path $PSScriptRoot \input\input_day1.txt
+$path = Join-Path $PSScriptRoot ..\input\2021\input_day1.txt
 [System.Int32[]]$measurements = Get-Content -Path $path
 
 $r1 = Get-aocSonarSweep -Measurements $measurements
