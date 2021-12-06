@@ -4,7 +4,7 @@ BeforeAll {
 
 Describe 'Get-aocVents' {
     BeforeAll {
-        $entries = Import-aocData -dummy
+        $entries = Import-aocData -day 5 -dummy
     }
     Context 'Considering only horizontal and vertical lines' {
         BeforeAll {

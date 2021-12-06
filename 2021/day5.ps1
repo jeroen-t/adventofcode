@@ -1,9 +1,9 @@
-function Import-aocData ([switch]$dummy) {
+function Import-aocData ([int]$day,[switch]$dummy) {
     if ($dummy.IsPresent) {
-        $path = Join-Path $PSScriptRoot ..\input\2021\input_day5_dummy.txt
+        $path = Join-Path $PSScriptRoot "..\input\2021\input_day$day`_dummy.txt"
         $data = Get-Content $path
     } else {
-        $path = Join-path $PSScriptRoot ..\input\2021\input_day5.txt
+        $path = Join-path $PSScriptRoot "..\input\2021\input_day$day`.txt"
         $data = Get-Content $path
     }
     $out = $data | ForEach-Object {
@@ -62,7 +62,7 @@ function Get-aocVents {
     ($locs | Group-Object -NoElement | Where-Object {$_.Count -gt 1}).Count
 }
 
-$data = import-aocData
+$data = import-aocData -day 5
 $a1 = get-aocVents -entries $data -direction NonDiag
 $a2 = get-aocVents -entries $data -direction All
 
