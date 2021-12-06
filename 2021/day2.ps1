@@ -1,3 +1,14 @@
+function Import-aocData ([int]$day,[switch]$dummy) {
+    if ($dummy.IsPresent) {
+        $path = Join-Path $PSScriptRoot "..\input\2021\input_day$day`_dummy.txt"
+        $data = Get-Content $path
+    } else {
+        $path = Join-path $PSScriptRoot "..\input\2021\input_day$day`.txt"
+        $data = Get-Content $path
+    }
+    Write-Output $data
+}
+
 function Get-aocSubmarineDirections {
     Param (
         [parameter(Mandatory)]
@@ -73,9 +84,8 @@ function Move-aocSubmarine {
     }
 }
 
-$path = Join-Path $PSScriptRoot ..\input\2021\input_day2.txt
-$course = Get-Content -Path $path
+$course = import-aocData -day 2 -dummy
+$a1 = (Get-aocSubmarineDirections $course | Move-aocSubmarine).Location
+$a2 = (Get-aocSubmarineDirections $course | Move-aocSubmarine -IncludeAim).Location
 
-$location1 = (Get-aocSubmarineDirections $course | Move-aocSubmarine).Location
-$location2 = (Get-aocSubmarineDirections $course | Move-aocSubmarine -IncludeAim).Location
-"[Day 2] first answer: {0}, second answer: {1} " -f $location1,$location2
+"[Day 2] first answer: {0}, second answer: {1} " -f $a1,$a2
