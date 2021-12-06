@@ -1,3 +1,14 @@
+function Import-aocData ([int]$day,[switch]$dummy) {
+    if ($dummy.IsPresent) {
+        $path = Join-Path $PSScriptRoot "..\input\2021\input_day$day`_dummy.txt"
+        $data = Get-Content $path
+    } else {
+        $path = Join-path $PSScriptRoot "..\input\2021\input_day$day`.txt"
+        $data = Get-Content $path
+    }
+    Write-Output $data
+}
+
 function Get-aocSubmarineDiagnostics {
     Param (
         [Parameter(Mandatory,ValueFromPipeline)]
@@ -79,13 +90,10 @@ function Get-aocSubmarineRating {
     }
 }
 
-$path = Join-Path $PSScriptRoot ..\input\2021\input_day3.txt
-$diagnosticReport = Get-Content -Path $path
-
+$diagnosticReport = import-aocData -day 3
 $a1 = (Get-aocSubmarineDiagnostics -diagnosticReport $diagnosticReport).PowerConsumption
-
 $r1 = Get-aocSubmarineRating -diagnosticReport $diagnosticReport -Rating CO2
 $r2 = Get-aocSubmarineRating -diagnosticReport $diagnosticReport -Rating oxygen
-
 $a2 = $r1 * $r2
+
 "[Day 3] first answer: {0}, second answer: {1} " -f $a1,$a2

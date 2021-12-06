@@ -4,8 +4,7 @@ BeforeAll {
 
 Describe 'Get-aocSubmarineDiagnostics' {
     BeforeAll {
-        $path = Join-Path $PSScriptRoot ..\input\2021\input_day3_dummy.txt
-        $diagnosticReport = Get-Content -Path $path
+        $diagnosticReport = import-aocData -day 3 -dummy
         $result = Get-aocSubmarineDiagnostics -diagnosticReport $diagnosticReport
     }
     Context 'Returns the correct results' {
@@ -23,8 +22,7 @@ Describe 'Get-aocSubmarineDiagnostics' {
 
 Describe 'Get-aocSubmarineRating' {
     BeforeAll {
-        $path = Join-Path $PSScriptRoot ..\input\2021\input_day3_dummy.txt
-        $diagnosticReport = Get-Content -Path $path
+        $diagnosticReport = import-aocData -day 3 -dummy
     }
     Context 'Returns the oxygen generator rating' {
         BeforeAll {
