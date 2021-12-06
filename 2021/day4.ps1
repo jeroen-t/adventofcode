@@ -21,5 +21,5 @@ function Import-aocData ([int]$day,[switch]$dummy) {
 
 $data = import-aocData -day 4 -dummy
 
-$balls = $data.Balls
+$Balls = $data.Balls
 $sheets = $data.Sheets
