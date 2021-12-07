@@ -36,12 +36,8 @@ function Get-aocCrabsAllignmentPositionMinimalCost {
             ($pos | ForEach-Object {
                 $pos = $_
                 ($CrabLocations | ForEach-Object {
-                    $limit = [math]::Abs($pos - $_)
-                    $cost = 0
-                    for ($i = 1; $i -le $limit; $i++) {
-                        $cost += $i
-                    }
-                    Write-Output $cost
+                    $n = [math]::Abs($pos - $_)
+                    $n * ($n + 1) / 2
                 } | Measure-Object -Sum).Sum
             } | Measure-Object -Minimum).Minimum
         }
