@@ -10,9 +10,9 @@ function Import-aocData ([int]$day,[switch]$dummy) {
 }
 
 function Get-aocDumboStartState ([string[]]$dumbos) {
-    $octopus = [ordered]@{}
-    for ($y = 0; $y -lt $dumbos.Count; $y++) {
-        for ($x = 0; $x -lt $dumbos[0].Length; $x++) {
+    $octopus = @{}
+    for ($y = 0; $y -lt 10; $y++) {
+        for ($x = 0; $x -lt 10; $x++) {
             $coord = "$x,$y"
             $octopus[$coord] = [int]$dumbos[$y][$x] - 48
         }
@@ -20,43 +20,77 @@ function Get-aocDumboStartState ([string[]]$dumbos) {
     $octopus
 }
 
-function Get-aocDumboNeighbours ([string]$Pos,[string[]]$dumbos){
-    $Neigh = @{}
-    $coords = @((-1,-1),(-1,0),(-1,1),(0,1),(0,-1),(1,-1),(1,0),(1,1))
-    for ($y = 0; $y -lt 10; $y++) {
-        for ($x = 0; $x -lt 10; $x++) {
-            $out = $coords | ForEach-Object {
-                if ($x + $_[0] -ge 0 -and $y + $_[1] -ge 0 -and $x + $_[0] -lt $dumbos[0].Length -and $y + $_[1] -lt $dumbos.Count) {
-                    "{0},{1}" -f $_[0],$_[1]
-                }
-            }
-            $Neigh.add("$x,$y", $out)
-            
+function Get-aocDumboNeighbor ([string]$coord) {
+    [int]$r,[int]$c = $coord.split(',')
+    $offsets =@((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+    $neigh = foreach($off in $offsets) {
+        $y,$x = $off[0],$off[1]
+        if ($r + $y -ge 0 -and $r + $y -le 9 -and $c + $x -ge 0 -and $c + $x -le 9) {
+            $ry = $r + $y
+            $cx = $c + $x
+            ,@($ry,$cx)
         }
-    }    
+    }
+    $neigh
 }
 
+function Start-aocDumboFlash ([string]$coord) {
+    $script:flash++
+    $octopus[$coord] = 0
+    Get-aocDumboNeighbor $coord | ForEach-Object {
+        $n = "$($_[0]),$($_[1])"
+        switch($octopus["$($_[0]),$($_[1])"])
+        {
+            ({$PSItem -eq 0}) {
+                continue
+            }
+            ({$PSItem -ge 9}) {
+                Start-aocDumboFlash $n
+            }
+            default {
+                $octopus[$n]++
+            }
+        }
+    }
+}
 
-Get-aocDumboStartState 
+function Step-aocDumboOctopus ([int]$day) {
+    for ($d = 1; $d -le $day; $d++) {
+        if ($octopus) {
+            foreach($octo in $($octopus.Keys)) {
+                $octopus[$octo]++
+            }
+        } else {
+            $octopus = Get-aocDumboStartState $data
+        }
+        for ($y = 0; $y -lt 10; $y++) {
+            for ($x = 0; $x -lt 10; $x++) {
+                if ($octopus["$x,$y"] -gt 9) {
+                    Start-aocDumboFlash "$x,$y"
+                }
+            }
+        }
+    }
+}
 
 $X = $($MyInvocation.MyCommand.Name).Split('.')[0] -replace "[^0-9]",''
 $data = Import-aocData -day $X -dummy
 
-$oct = Get-aocDumboStartState $data
+$octopus = Get-aocDumboStartState $data
 
-$oct
+$flash = 0
+Step-aocDumboOctopus -day 100
+$flash
 
-$nb = for ($i = -1; $i -lt 2; $i++) {
-            for ($j = -1; $j -lt 2; $j++) {
-                if ($x + $i -ge 0 -and $y + $j -ge 0 -and $x + $i -lt $dumbos[0].Length -and $y + $j -lt $dumbos.Count -and -not ($i -eq 0 -and $j -eq 0)) {
-                    "{0},{1}" -f $($x + $i), $($y + $j)
-                }
-            }
-        }
+$octopus = Get-aocDumboStartState $data
 
-
-
-
+$steps = 0
+do {
+    $steps++
+    $flash = 0
+    Step-aocDumboOctopus -day 1
+} until ($flash -eq 100)
+$steps
 
 
 
