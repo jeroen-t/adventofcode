@@ -1,5 +1,3 @@
-$totalflashes = $steps = $flashes = 0
-
 function Import-aocData ([int]$day,[switch]$dummy) {
     if ($dummy.IsPresent) {
         $path = Join-Path $PSScriptRoot "..\input\2021\input_day$day`_dummy.txt"
@@ -22,8 +20,71 @@ function Get-aocDumboStartState ([string[]]$dumbos) {
     $octopus
 }
 
+function Get-aocDumboNeighbours ([string]$Pos,[string[]]$dumbos){
+    $Neigh = @{}
+    $coords = @((-1,-1),(-1,0),(-1,1),(0,1),(0,-1),(1,-1),(1,0),(1,1))
+    for ($y = 0; $y -lt 10; $y++) {
+        for ($x = 0; $x -lt 10; $x++) {
+            $out = $coords | ForEach-Object {
+                if ($x + $_[0] -ge 0 -and $y + $_[1] -ge 0 -and $x + $_[0] -lt $dumbos[0].Length -and $y + $_[1] -lt $dumbos.Count) {
+                    "{0},{1}" -f $_[0],$_[1]
+                }
+            }
+            $Neigh.add("$x,$y", $out)
+            
+        }
+    }    
+}
+
+
+Get-aocDumboStartState 
+
+$X = $($MyInvocation.MyCommand.Name).Split('.')[0] -replace "[^0-9]",''
+$data = Import-aocData -day $X -dummy
+
+$oct = Get-aocDumboStartState $data
+
+$oct
+
+$nb = for ($i = -1; $i -lt 2; $i++) {
+            for ($j = -1; $j -lt 2; $j++) {
+                if ($x + $i -ge 0 -and $y + $j -ge 0 -and $x + $i -lt $dumbos[0].Length -and $y + $j -lt $dumbos.Count -and -not ($i -eq 0 -and $j -eq 0)) {
+                    "{0},{1}" -f $($x + $i), $($y + $j)
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<#
+
+function Get-aocDumboStartState ([string[]]$dumbos) {
+    $octopus = [ordered]@{}
+    for ($y = 0; $y -lt $dumbos.Count; $y++) {
+        for ($x = 0; $x -lt $dumbos[0].Length; $x++) {
+            $coord = "$x,$y"
+            $octopus[$coord] = [int]$dumbos[$y][$x] - 48
+        }
+    }
+    $octopus
+}
+
 function Get-aocDumboNeighbours ([string]$coord) {
-    $neighbours = @{}
+    if (!$neighbours) {
+        $neighbours = @{}
+    }
     if ($neighbours.ContainsKey($coord)) {
         $neighbours[$coord]
     } else {
@@ -39,8 +100,7 @@ function Get-aocDumboNeighbours ([string]$coord) {
         $nb
     }
 }
-
-Get-aocDumboNeighbours "0,0"
+#Get-aocDumboNeighbours "0,1"
 
 function New-aocDumboFlash ([string]$coord) {
     $script:flashes ++
@@ -185,6 +245,9 @@ do {
 # $a2=$null
 
 "[Day $X] My answer for part 1 is: {0}, and for part 2 is: {1}." -f $a1,$a2
+#>
+
+
 #>
 
 
