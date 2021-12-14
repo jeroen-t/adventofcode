@@ -12,6 +12,14 @@ function Import-aocData ([int]$day,[switch]$dummy) {
 $X = $($MyInvocation.MyCommand.Name).Split('.')[0] -replace "[^0-9]",''
 $data = Import-aocData -day $X -dummy
 
+foreach ($line in $data) {
+    $start,$end = $line.Split('-')
+    $start
+    $end
+    " "
+}
+
+
 $a1=$null
 $a2=$null
 
