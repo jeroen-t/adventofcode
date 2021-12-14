@@ -90,4 +90,4 @@ do {
 } until ($flash -eq 100)
 $a2 = $steps
 
-"[Day 12] My answer for part 1 is: {0}, and for part 2 is: {1}" -f $a1,$a2
+"[Day 11] My answer for part 1 is: {0}, and for part 2 is: {1}" -f $a1,$a2
