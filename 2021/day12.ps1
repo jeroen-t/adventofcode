@@ -64,31 +64,77 @@ while($todo.Count -ne 0) {
 
     foreach ($cand in $edges[$path[-1]]) {
         if (-not($cand -ceq $cand.ToLower()) -or -not($cand -in $path)) {
-            $todo.Enqueue($path + @($cand))
+            $todo.Enqueue(@($path) + @($cand))
         }
     }
 }
 $a1 = $allpaths
+$a1
 
-# $allpaths = 0
+
+
+
+$allpaths = @()
+#$allpaths = 0
+$todo = New-Object System.Collections.Queue
+$todo.Enqueue(@('start'))
+while($todo.Count -ne 0) {
+    $path = $todo.Dequeue()
+
+    if ($path[-1] -eq 'end') {
+        $allpaths += $path
+        #$allpaths ++
+        $double_cave = $null
+        continue
+    }
+
+    foreach ($cand in $edges[$path[-1]]) {
+        if (-not($cand -ceq $cand.ToLower())) { #uppercase mag zo vaak als ie wil
+            $todo.Enqueue(@($path) + @($cand))
+        } elseif (-not($cand -in $path) -or $cand -ceq $double_cave) { #niet uppercase, lowercase nog niet aan de beurt geweest of double cave
+            if ($null -eq $double_cave -and $cand -ne 'start') { # nog geen double cave en niet 'start'
+                $double_cave = $cand
+                $todo.Enqueue(@($path) + @($cand))
+            } elseif ($cand -ceq $double_cave -and ($path.Where({$_ -eq $double_cave},'Default')).count -eq 1) { # cand is double cave en double gave is 1 keer eerder geweest
+                $todo.Enqueue(@($path) + @($cand))
+                continue
+                #$double_cave = $null
+            } else { 
+                $todo.Enqueue(@($path) + @($cand))
+            }
+        }
+    }
+}
+$a2 = $allpaths
+$a2
+
+
+
+   
+# #$allpaths = 0
+# $allpaths = @()
 # $todo = New-Object System.Collections.Queue
-# $todo.Enqueue(@('start'))
+# $todo.Enqueue((@('start'),$false))
 # while($todo.Count -ne 0) {
-#     $path = $todo.Dequeue()
+#     $path, $double_cave = $todo.Dequeue()
 
 #     if ($path[-1] -eq 'end') {
-#         #$allpaths += $path
-#         $allpaths ++
+#         $allpaths += $path
+#         #$allpaths ++
 #         continue
 #     }
 
 #     foreach ($cand in $edges[$path[-1]]) {
-#         if (-not($cand -ceq $cand.ToLower()) -or -not($cand -in $path)) {
-#             $todo.Enqueue($path + @($cand))
+#         if ($cand -eq 'start') {
+#             continue
+#         } elseif ($cand -ceq $cand.ToUpper() -or $cand -notin $path) {
+#             $todo.Enqueue(($path + @($cand), $double_cave))
+#         } elseif (-not($double_cave) -and ($path.Where({$_ -eq $cand},'Default').count) -eq 1) {
+#             $todo.Enqueue(($path + @($cand), $true))
 #         }
 #     }
 # }
-# $a2 = $allpaths
-
+# #$a2 = $allpaths
+# $allpaths
 
 "[Day $X] My answer for part 1 is: {0}, and for part 2 is: {1}." -f $a1,$a2
