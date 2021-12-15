@@ -7,21 +7,39 @@ function Import-aocData ([int]$day,[switch]$dummy) {
     $data,$instructions = (Get-Content $path -raw) -split "\r\n\r\n"
     [PSCustomObject]@{
         data = -split($data)
-        instructions = $instructions -split "\r\n"
+        instructions = $instructions -replace 'fold along ','' -split "\r\n"
     }
+}
+
+function Get-aocDots ([string[]]$data) {
+    $dots = $data | ForEach-Object {
+        [int]$x,[int]$y = $_.split(',')
+        [PSCustomObject]@{
+            x = $x
+            y = $y
+            loc = "$x,$y"
+        }
+    }
+    $dots
+}
+
+function Get-aocFolds ([string[]]$data) {
+    $folds = $data | ForEach-Object {
+        [string]$axis,[int]$digit = $_.split('=')
+        [PSCustomObject]@{
+            axis = $axis
+            digit = $digit
+        }
+    }
+    $folds
 }
 
 $X = $($MyInvocation.MyCommand.Name).Split('.')[0] -replace "[^0-9]",''
 $data = Import-aocData -day $X -dummy
 
-foreach ($line in $data.data) {
-    "hello $line"
-}
 
-
-foreach ($line in $data.instructions) {
-    "hello $line"
-}
+$dots = Get-aocDots $data.data
+$folds = Get-aocFolds $data.instructions
 
 $a1=$null
 $a2=$null
