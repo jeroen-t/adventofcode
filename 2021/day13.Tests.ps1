@@ -2,18 +2,15 @@ BeforeAll {
     . $PSCommandPath.Replace('.Tests.ps1','.ps1')
 }
 
-describe 'Verb-aocNoun' {
+describe 'New-aocTransparentPaperFold' {
     BeforeAll {
-        $data = import-aocData -day X -dummy
+        $data = import-aocData -day 13 -dummy
+        $instructions = $data.instructions
+        $dots = Get-aocDots $data.data
     }
-    Context 'Does something' {
-        it 'Does X' {
-            Verb-aocNoun $data | should -Be X
-        }
-    }
-    Context 'Does something' {
-        it 'Does X' {
-            Verb-aocNoun $data | should -Be X
+    Context 'Returns the amount of dots after X folds' {
+        it 'Returns 17 visible dots' {
+            New-aocTransparentPaperFold -dots $dots -instructions $instructions[0] | should -Be 17
         }
     }
 }
